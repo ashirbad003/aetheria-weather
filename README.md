@@ -184,24 +184,6 @@ All rights reserved © Ashirbad Pattnaik.
 
 ---
 
-<div align="center">
-
-**✦ CREATOR ✦**
-
-Designed and Developed by
-
-**ASHIRBAD PATTNAIK**
-
-───── ✦ ─────
-
-*Aetheria Weather Intelligence*
-
-[GitHub](https://github.com/ashirbad003) · [Portfolio](https://ashirbad-portfolio-six.vercel.app)
-
-</div>
-
----
-
 ## 🛠️ Tech Stack
 
 <div align="center">
@@ -240,6 +222,24 @@ Designed and Developed by
 <img src="./assets/demo.gif" alt="Aetheria live demo" width="90%"/>
 
 <sub>🎥 Live 3D atmosphere, global search, and analytics — recorded from the actual running app</sub>
+
+</div>
+
+---
+
+<div align="center">
+
+**✦ CREATOR ✦**
+
+Designed and Developed by
+
+**ASHIRBAD PATTNAIK**
+
+───── ✦ ─────
+
+*Aetheria Weather Intelligence*
+
+[GitHub](https://github.com/ashirbad003) · [Portfolio](https://ashirbad-portfolio-six.vercel.app)
 
 </div>
 
