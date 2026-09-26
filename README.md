@@ -14,10 +14,6 @@
 ![Made with JS](https://img.shields.io/badge/JavaScript-ES2022-f7df1e?style=for-the-badge&logo=javascript&logoColor=000&labelColor=0f2027)
 ![Maps](https://img.shields.io/badge/Maps-Standard%20%7C%20Satellite-2c5364?style=for-the-badge&labelColor=0f2027)
 
-<br/>
-
-[![Live Demo](https://img.shields.io/badge/🌍%20LIVE%20DEMO-aetheria--weather--phi.vercel.app-00c6ff?style=for-the-badge&labelColor=0f2027)](https://aetheria-weather-phi.vercel.app)
-
 </div>
 
 ---
