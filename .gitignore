@@ -1,0 +1,24 @@
+# Environment files & Secrets
+.env
+.env.local
+.env.*.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Node modules & Logs (if package manager is used)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Aetheria 3D Global Weather - Real-time global weather intelligence with interactive 3D visuals, live city photography, interactive forecast charts, and local time tracking.">
+    <meta name="keywords" content="weather, 3D weather app, global forecast, live weather, real-time weather radar, weather charts">
+    <meta name="author" content="Ashirbad Pattnaik">
+    <meta name="theme-color" content="#0f172a">
+
+    <title>Aetheria 3D | Global Weather Intelligence</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- PWA Manifest & App Icons -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Aetheria Weather">
+
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+    <!-- Referrer policy for external image providers (Wikimedia Commons) -->
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-auto">
+
+    <!-- Dynamic 3D Animated Weather Backdrop with Multi-Layer Parallax & Atmosphere Physics -->
+    <div id="weatherBackdrop" class="weather-backdrop" aria-hidden="true">
+        <div id="skyAtmosphere" class="backdrop-layer sky-layer"></div>
+        <div id="sunGlowLayer" class="backdrop-layer celestial-glow-layer"></div>
+        <div id="cloudBackdropLayer" class="backdrop-layer cloud-layer"></div>
+        <canvas id="atmosphereCanvas" class="backdrop-layer particle-canvas"></canvas>
+        <div id="vignetteOverlay" class="backdrop-layer vignette-layer"></div>
+    </div>
+
+    <!-- Offline Status Banner -->
+    <div id="offlineBanner" class="offline-banner hidden" role="alert">
+        <span class="offline-icon">📡</span>
+        <span id="offlineText">📶 Offline Mode — Showing last available weather data.</span>
+    </div>
+
+    <!-- Main Application Container -->
+    <div class="app-container">
+
+        <!-- Top Header & Navigation -->
+        <header class="app-header">
+            <div class="brand-container">
+                <div class="brand-logo" aria-hidden="true">
+                    <span class="logo-orb"></span>
+                    <span class="logo-glyph">⛅</span>
+                </div>
+                <div class="brand-text">
+                    <h1 class="brand-title">AETHERIA</h1>
+                    <span class="brand-tagline">3D Weather Intelligence</span>
+                </div>
+            </div>
+
+            <!-- Global Search & Location Controls -->
+            <div class="search-wrapper">
+                <form id="searchForm" class="search-form" role="search" onsubmit="return false;">
+                    <div class="search-input-group">
+                        <span class="search-icon" aria-hidden="true">🔍</span>
+                        <input 
+                            type="text" 
+                            id="cityInput" 
+                            class="search-input" 
+                            placeholder="Search city, state or country (e.g., Tokyo, London, Bhubaneswar)..." 
+                            autocomplete="off"
+                            spellcheck="false"
+                            aria-label="Search city, state or country"
+                        >
+                        <button type="button" id="clearSearchBtn" class="clear-search-btn hidden" aria-label="Clear search input">✕</button>
+                    </div>
+                    
+                    <button type="submit" id="searchBtn" class="btn btn-primary" aria-label="Execute search">
+                        <span class="btn-text">Search</span>
+                        <span class="btn-spinner hidden" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" id="geoBtn" class="btn btn-secondary" title="Use My Current Location" aria-label="Use My Current Location">
+                        <span class="geo-icon" aria-hidden="true">📍</span>
+                        <span class="btn-text">My Location</span>
+                    </button>
+                </form>
+
+                <!-- Search Suggestions / Disambiguation Dropdown -->
+                <div id="suggestionsDropdown" class="suggestions-dropdown hidden" role="listbox" aria-label="Location suggestions"></div>
+            </div>
+
+            <!-- Quick Action Controls -->
+            <div class="header-controls">
+                <!-- Unit Switcher -->
+                <div class="unit-toggle-group" role="group" aria-label="Temperature unit toggle">
+                    <button id="unitCelsiusBtn" class="unit-btn active" data-unit="C" aria-pressed="true">°C</button>
+                    <button id="unitFahrenheitBtn" class="unit-btn" data-unit="F" aria-pressed="false">°F</button>
+                </div>
+
+                <!-- Refresh Button -->
+                <button id="refreshBtn" class="icon-btn" title="Refresh weather data" aria-label="Refresh weather data">
+                    <span class="refresh-icon" aria-hidden="true">🔄</span>
+                </button>
+
+                <!-- Share Button -->
+                <button id="shareBtn" class="icon-btn" title="Share current weather" aria-label="Share current weather">
+                    <span class="share-icon" aria-hidden="true">📤</span>
+                </button>
+
+                <!-- Snapshot Button -->
+                <button id="snapshotBtn" class="icon-btn" title="Generate Weather Snapshot" aria-label="Generate Weather Snapshot">
+                    <span aria-hidden="true">📸</span>
+                </button>
+
+                <!-- PWA Install Button -->
+                <button id="pwaInstallBtn" class="btn btn-secondary pwa-install-btn hidden" title="Install Aetheria Application" aria-label="Install Aetheria Application">
+                    <span aria-hidden="true">📱</span>
+                    <span class="btn-text">Install App</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Status / Error Notification Toast -->
+        <div id="statusToast" class="status-toast hidden" role="status" aria-live="polite">
+            <span id="statusIcon" class="status-icon">ℹ️</span>
+            <span id="statusMessage" class="status-message">Loading weather...</span>
+            <button id="statusCloseBtn" class="status-close" aria-label="Dismiss message">✕</button>
+        </div>
+
+        <!-- Recent Searches Bar -->
+        <section id="recentSearchesSection" class="recent-searches-section hidden" aria-label="Recent searches">
+            <div class="recent-searches-header">
+                <span class="recent-title">🕘 Recent Searches:</span>
+                <div id="recentSearchesList" class="recent-tags-container"></div>
+                <button id="clearRecentBtn" class="clear-recent-btn" title="Clear search history">Clear</button>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-grid" id="mainDashboard">
+
+            <!-- LEFT COLUMN: City Photograph & 3D Main Weather Card -->
+            <div class="col-hero">
+                
+                <!-- City Photograph Showcase (3D Parallax Tilt) -->
+                <div class="card city-photo-card glass-card tilt-card" id="cityPhotoCard" data-tilt>
+                    <div class="city-photo-wrapper">
+                        <!-- Skeleton Loader -->
+                        <div id="photoSkeleton" class="skeleton skeleton-photo">
+                            <div class="skeleton-shimmer"></div>
+                            <span class="skeleton-text">Loading city image...</span>
+                        </div>
+                        
+                        <!-- Real Dynamic Image -->
+                        <img id="cityImage" class="city-image hidden" src="" alt="City photograph" loading="lazy" referrerpolicy="no-referrer" crossorigin="anonymous">
+                        
+                        <!-- Fallback Atmospheric Backdrop -->
+                        <div id="photoFallback" class="photo-fallback hidden">
+                            <div class="fallback-glow"></div>
+                            <span class="fallback-icon">🏙️</span>
+                            <p id="fallbackNotice">Representative image unavailable</p>
+                        </div>
+
+                        <!-- Photograph Glass Overlay with Location & Local Time -->
+                        <div class="photo-overlay">
+                            <div class="location-badge">
+                                <span class="pin-icon" aria-hidden="true">📍</span>
+                                <div>
+                                    <h2 id="resolvedCityName" class="city-name">Loading...</h2>
+                                    <p id="resolvedRegionCountry" class="country-name">---</p>
+                                </div>
+                            </div>
+
+                            <div class="photo-top-badges">
+                                <!-- Favorite Toggle Button -->
+                                <button id="favoriteToggleBtn" class="favorite-toggle-btn" aria-label="Toggle favorite" title="Save to favorites">
+                                    <span id="favoriteStarIcon" class="star-icon">☆</span>
+                                </button>
+                                
+                                <!-- Local Time Live Clock -->
+                                <div class="local-time-badge">
+                                    <span class="clock-icon" aria-hidden="true">🕐</span>
+                                    <div>
+                                        <span class="badge-label">Local Time</span>
+                                        <strong id="localTimeDisplay" class="local-time-val">--:--:--</strong>
+                                        <span id="timezoneLabel" class="tz-label">UTC</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="photo-bottom-info">
+                                <span id="photoAttribution" class="photo-attribution"></span>
+                                <span id="lastUpdatedLabel" class="last-updated">Last updated: --</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3D Current Weather Master Card -->
+                <div class="card weather-master-card glass-card tilt-card" id="weatherMasterCard" data-tilt>
+                    <div class="master-header">
+                        <div class="condition-badge-group">
+                            <span id="weatherIconLarge" class="weather-icon-large" aria-hidden="true">⛅</span>
+                            <div>
+                                <span class="badge-sub">Current Condition</span>
+                                <h3 id="conditionText" class="condition-title">Partly Cloudy</h3>
+                                <p id="conditionDescription" class="condition-desc">Scattered cloud cover</p>
+                            </div>
+                        </div>
+                        <div class="day-night-pill" id="dayNightPill">
+                            <span id="dayNightIcon">☀️</span>
+                            <span id="dayNightText">Daytime</span>
+                        </div>
+                    </div>
+
+                    <div class="master-temp-row">
+                        <div class="temp-huge-wrap">
+                            <span id="currentTempLarge" class="temp-huge">--</span>
+                            <span id="tempUnitSymbol" class="temp-degree-symbol">°C</span>
+                        </div>
+                        <div class="temp-extra-details">
+                            <div class="feel-like-box">
+                                <span class="feel-label">Feels Like</span>
+                                <strong id="feelsLikeTemp" class="feel-val">--°C</strong>
+                            </div>
+                            <div class="high-low-box">
+                                <span class="high-low-label">Today's Range</span>
+                                <span class="high-low-val">
+                                    <span class="high-temp">↑ <span id="todayMaxTemp">--°</span></span>
+                                    <span class="low-temp">↓ <span id="todayMinTemp">--°</span></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weather Highlights Bar -->
+                    <div class="quick-highlights">
+                        <div class="quick-chip">
+                            <span class="chip-icon">🌧️</span>
+                            <span class="chip-label">Precipitation:</span>
+                            <strong id="quickPrecip">0 mm</strong>
+                        </div>
+                        <div class="quick-chip">
+                            <span class="chip-icon">💨</span>
+                            <span class="chip-label">Wind Gusts:</span>
+                            <strong id="quickGusts">-- km/h</strong>
+                        </div>
+                        <div class="quick-chip">
+                            <span class="chip-icon">⛰️</span>
+                            <span class="chip-label">Elevation:</span>
+                            <strong id="quickElevation">-- m</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Favorite Cities Drawer -->
+                <div class="card favorites-card glass-card">
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">⭐</span>
+                            <h3 class="card-title">Favorite Locations</h3>
+                        </div>
+                        <span id="favoritesCount" class="badge-count">0 saved</span>
+                    </div>
+                    <div id="favoritesList" class="favorites-grid">
+                        <div class="favorites-empty-state" id="favoritesEmptyState">
+                            <p class="empty-title">No favorite cities yet</p>
+                            <p class="empty-subtitle">Click the star icon (☆) on any city to save it for one-click access.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Details, Hourly Forecast, Charts, 7-Day & Map -->
+            <div class="col-main">
+
+                <!-- Detailed Weather Metrics Grid -->
+                <section class="metrics-grid" aria-label="Detailed Weather Metrics">
+                    
+                    <!-- Humidity Card -->
+                    <div class="card metric-card glass-card">
+                        <div class="metric-top">
+                            <span class="metric-icon">💧</span>
+                            <span class="metric-name">Humidity</span>
+                        </div>
+                        <div class="metric-body">
+                            <strong id="metricHumidity" class="metric-value">--%</strong>
+                            <div class="progress-bar-wrap" aria-hidden="true">
+                                <div id="humidityBar" class="progress-bar" style="width: 0%;"></div>
+                            </div>
+                            <span id="humidityStatus" class="metric-hint">Comfortable</span>
+                        </div>
+                    </div>
+
+                    <!-- Wind Speed & Direction Card -->
+                    <div class="card metric-card glass-card">
+                        <div class="metric-top">
+                            <span class="metric-icon">💨</span>
+                            <span class="metric-name">Wind Speed</span>
+                        </div>
+                        <div class="metric-body">
+                            <div class="wind-metric-row">
+                                <strong id="metricWindSpeed" class="metric-value">-- km/h</strong>
+                                <div class="compass-circle" id="compassNeedle" title="Wind Direction">
+                                    <span class="compass-arrow">↑</span>
+                                </div>
+                            </div>
+                            <span id="metricWindDirection" class="metric-hint">Direction: --</span>
+                        </div>
+                    </div>
+
+                    <!-- UV Index Card -->
+                    <div class="card metric-card glass-card">
+                        <div class="metric-top">
+                            <span class="metric-icon">☀️</span>
+                            <span class="metric-name">UV Index</span>
+                        </div>
+                        <div class="metric-body">
+                            <div class="uv-metric-row">
+                                <strong id="metricUvIndex" class="metric-value">--</strong>
+                                <span id="uvBadge" class="uv-badge uv-low">Low</span>
+                            </div>
+                            <span id="uvRecommendation" class="metric-hint">Minimal protection needed</span>
+                        </div>
+                    </div>
+
+                    <!-- Air Quality Card (AQI & Pollutants) -->
+                    <div class="card metric-card glass-card aqi-card" id="aqiCard">
+                        <div class="metric-top">
+                            <span class="metric-icon">🌬️</span>
+                            <span class="metric-name">Air Quality (AQI)</span>
+                        </div>
+                        <div class="metric-body">
+                            <div class="aqi-metric-row">
+                                <strong id="metricAqiValue" class="metric-value">--</strong>
+                                <span id="aqiBadge" class="aqi-badge aqi-good">Good</span>
+                            </div>
+                            <span id="aqiGuidance" class="metric-hint">Satisfactory air quality</span>
+                            <div class="pollutants-mini-grid">
+                                <div class="pollutant-item">
+                                    <span class="pollutant-label">PM2.5</span>
+                                    <strong id="pollutantPm25">--</strong>
+                                </div>
+                                <div class="pollutant-item">
+                                    <span class="pollutant-label">PM10</span>
+                                    <strong id="pollutantPm10">--</strong>
+                                </div>
+                                <div class="pollutant-item">
+                                    <span class="pollutant-label">NO₂</span>
+                                    <strong id="pollutantNo2">--</strong>
+                                </div>
+                                <div class="pollutant-item">
+                                    <span class="pollutant-label">O₃</span>
+                                    <strong id="pollutantO3">--</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Atmospheric Pressure Card -->
+                    <div class="card metric-card glass-card">
+                        <div class="metric-top">
+                            <span class="metric-icon">⏱️</span>
+                            <span class="metric-name">Pressure</span>
+                        </div>
+                        <div class="metric-body">
+                            <strong id="metricPressure" class="metric-value">-- hPa</strong>
+                            <span id="pressureStatus" class="metric-hint">Normal barometric pressure</span>
+                        </div>
+                    </div>
+
+                    <!-- Visibility Card -->
+                    <div class="card metric-card glass-card">
+                        <div class="metric-top">
+                            <span class="metric-icon">👁️</span>
+                            <span class="metric-name">Visibility</span>
+                        </div>
+                        <div class="metric-body">
+                            <strong id="metricVisibility" class="metric-value">-- km</strong>
+                            <span id="visibilityStatus" class="metric-hint">Clear horizon</span>
+                        </div>
+                    </div>
+
+                    <!-- Cloud Cover Card -->
+                    <div class="card metric-card glass-card">
+                        <div class="metric-top">
+                            <span class="metric-icon">☁️</span>
+                            <span class="metric-name">Cloud Coverage</span>
+                        </div>
+                        <div class="metric-body">
+                            <strong id="metricCloudCover" class="metric-value">--%</strong>
+                            <div class="progress-bar-wrap" aria-hidden="true">
+                                <div id="cloudBar" class="progress-bar progress-bar-cloud" style="width: 0%;"></div>
+                            </div>
+                            <span id="cloudStatus" class="metric-hint">Partly cloudy skies</span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Solar Timeline: Sunrise & Sunset Visual Arc -->
+                <section class="card solar-card glass-card" aria-label="Sunrise and Sunset Tracker">
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">🌅</span>
+                            <h3 class="card-title">Solar Position & Day Cycle</h3>
+                        </div>
+                        <span id="dayLengthLabel" class="badge-sub">Daylight: -- hrs</span>
+                    </div>
+                    
+                    <div class="solar-arc-container">
+                        <svg class="solar-arc-svg" viewBox="0 0 500 160" preserveAspectRatio="none" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="arcGradient" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="#f59e0b" />
+                                    <stop offset="50%" stop-color="#38bdf8" />
+                                    <stop offset="100%" stop-color="#ec4899" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Horizon Line -->
+                            <line x1="30" y1="130" x2="470" y2="130" stroke="rgba(255,255,255,0.15)" stroke-dasharray="4" stroke-width="2"/>
+                            <!-- Sun Trajectory Arc -->
+                            <path id="sunArcPath" d="M 50 130 Q 250 15 450 130" fill="none" stroke="url(#arcGradient)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Moving Sun/Moon Indicator -->
+                            <circle id="sunIndicator" cx="250" cy="72" r="9" fill="#facc15" stroke="#ffffff" stroke-width="3" filter="drop-shadow(0 0 8px rgba(250,204,21,0.8))"/>
+                        </svg>
+                        <div class="solar-times-row">
+                            <div class="solar-time-box">
+                                <span class="solar-time-icon">🌅</span>
+                                <span class="solar-label">Sunrise</span>
+                                <strong id="sunriseTime">--:--</strong>
+                            </div>
+                            <div class="solar-time-box center">
+                                <span class="solar-label">Solar Noon</span>
+                                <strong id="solarNoonTime">--:--</strong>
+                            </div>
+                            <div class="solar-time-box right">
+                                <span class="solar-time-icon">🌇</span>
+                                <span class="solar-label">Sunset</span>
+                                <strong id="sunsetTime">--:--</strong>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Hourly Forecast Carousel (24 Hours) -->
+                <section class="card hourly-forecast-card glass-card" aria-label="Hourly Forecast">
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">⏱️</span>
+                            <h3 class="card-title">Hourly Forecast (Next 24 Hours)</h3>
+                        </div>
+                        <span class="scroll-hint">Scroll horizontally ➔</span>
+                    </div>
+                    <div id="hourlyContainer" class="hourly-scroll-container">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+                <!-- Rain Probability Timeline (Next 24 Hours) -->
+                <section class="card rain-timeline-card glass-card" aria-label="Rain Probability Timeline">
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">🌧️</span>
+                            <div>
+                                <h3 class="card-title">Rain Probability Timeline</h3>
+                                <span class="badge-sub">Hourly Precipitation Probability & Volume</span>
+                            </div>
+                        </div>
+                        <span class="scroll-hint">Scroll horizontally ➔</span>
+                    </div>
+                    <div id="rainTimelineContainer" class="rain-timeline-scroll">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+                <!-- Interactive Forecast Charts (Chart.js) -->
+                <section class="card charts-card glass-card" aria-label="Interactive Weather Charts">
+                    <div class="chart-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">📊</span>
+                            <h3 class="card-title">Weather Trend Analytics</h3>
+                        </div>
+                        <!-- Chart Tab Switcher -->
+                        <div class="chart-tabs" role="tablist">
+                            <button class="chart-tab active" data-chart="temp" role="tab" aria-selected="true">🌡️ Temperature</button>
+                            <button class="chart-tab" data-chart="humidity" role="tab" aria-selected="false">💧 Humidity & Rain</button>
+                            <button class="chart-tab" data-chart="wind" role="tab" aria-selected="false">💨 Wind Speed</button>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="weatherChart" aria-label="Weather trend interactive chart" role="img"></canvas>
+                    </div>
+                </section>
+
+                <!-- 7-Day Extended Forecast -->
+                <section class="card daily-forecast-card glass-card" aria-label="7-Day Extended Forecast">
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">📅</span>
+                            <h3 class="card-title">7-Day Extended Outlook</h3>
+                        </div>
+                        <span class="badge-sub">Real Meteorological Projections</span>
+                    </div>
+                    <div id="dailyForecastContainer" class="daily-forecast-grid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+                <!-- Weather Insights & Observations (Deterministic) -->
+                <section class="card insights-card glass-card" aria-label="Weather Insights">
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">🧠</span>
+                            <h3 class="card-title">Meteorological Insights</h3>
+                        </div>
+                        <span class="insights-verified-badge">✓ Real-Data Derived</span>
+                    </div>
+                    <div id="insightsContainer" class="insights-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+                <!-- Famous Places of Searched Location (Dynamic POI Discovery) -->
+                <section class="card places-section glass-card" id="placesSection" aria-label="Explore Famous Places">
+                    <div class="places-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">📍</span>
+                            <div>
+                                <h3 id="placesHeading" class="card-title">Explore Location</h3>
+                                <p id="placesSubheading" class="places-subheading">Discover famous landmarks, heritage, and attractions</p>
+                            </div>
+                        </div>
+                        <div class="places-weather-pill" id="placesWeatherPill">
+                            <span id="placesWeatherIcon">🌤️</span>
+                            <span id="placesWeatherMsg">Live conditions updated</span>
+                        </div>
+                    </div>
+
+                    <!-- Places Grid (Skeletons / Cards / Empty State) -->
+                    <div id="placesContainer" class="places-grid">
+                        <!-- Populated dynamically with real cards -->
+                    </div>
+                </section>
+
+                <!-- Interactive Geographic Radar & Satellite Map (Leaflet.js) -->
+                <section class="card map-card glass-card" aria-label="Interactive Location Map">
+                    <div class="card-header-row map-header-row">
+                        <div class="card-title-group">
+                            <span class="card-icon">🗺️</span>
+                            <div>
+                                <h3 class="card-title">Geographic Location & Satellite Radar</h3>
+                                <span id="mapCoordinatesLabel" class="coords-label">Lat: --, Lon: --</span>
+                            </div>
+                        </div>
+
+                        <!-- Map Layer Switcher & Recenter Controls -->
+                        <div class="map-controls-group">
+                            <div class="map-layer-tabs" role="tablist" aria-label="Map style layers">
+                                <button id="mapLayerStandardBtn" class="map-layer-tab" role="tab" aria-selected="false" title="OpenStreetMap Standard Map">🗺️ Standard</button>
+                                <button id="mapLayerSatelliteBtn" class="map-layer-tab active" role="tab" aria-selected="true" title="Real Esri World Imagery Satellite Map">🛰️ Satellite</button>
+                            </div>
+                            <button id="mapRecenterBtn" class="btn btn-secondary map-recenter-btn" title="Recenter to searched location">🎯 Recenter</button>
+                        </div>
+                    </div>
+
+                    <div class="map-wrapper-relative">
+                        <div id="leafletMap" class="leaflet-map-container" role="application" aria-label="Geographic satellite and road map"></div>
+                        <div id="mapAtmosphereOverlay" class="map-atmosphere-overlay" aria-hidden="true"></div>
+                        <div id="mapLoadingOverlay" class="map-loading-overlay hidden">
+                            <span class="map-spinner"></span>
+                            <span>Loading map tiles...</span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+
+        <!-- Place Details Modal -->
+        <div id="placeDetailsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="placeModalTitle">
+            <div class="modal-glass-card place-modal-card">
+                <div class="modal-header">
+                    <div class="place-modal-title-group">
+                        <span id="placeModalIcon" class="place-modal-icon">📍</span>
+                        <div>
+                            <h3 id="placeModalTitle" class="modal-title">Place Details</h3>
+                            <span id="placeModalCategory" class="place-category-badge">Landmark</span>
+                        </div>
+                    </div>
+                    <button id="closePlaceModalBtn" class="modal-close-btn" aria-label="Close place details">✕</button>
+                </div>
+
+                <div class="place-modal-body">
+                    <div class="place-modal-image-wrap">
+                        <img id="placeModalImage" src="" alt="Place photo" class="place-modal-img">
+                        <div id="placeModalImageFallback" class="place-image-fallback hidden">
+                            <span>🏛️</span>
+                        </div>
+                        <div id="placeModalDistance" class="place-modal-dist-badge">📍 3.2 km away</div>
+                    </div>
+
+                    <div class="place-modal-content">
+                        <p id="placeModalExtract" class="place-modal-desc">Loading summary...</p>
+
+                        <div class="place-modal-meta-grid">
+                            <div class="meta-item">
+                                <span class="meta-label">Location</span>
+                                <strong id="placeModalCity">City</strong>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Coordinates</span>
+                                <strong id="placeModalCoords">--</strong>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Weather Context</span>
+                                <strong id="placeModalWeather">☀️ Clear skies</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions place-modal-actions">
+                    <button id="placeModalViewMapBtn" class="btn btn-primary">🗺️ View on Map</button>
+                    <a id="placeModalDirectionsLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">🧭 Get Directions</a>
+                    <a id="placeModalWikiLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-tertiary">📖 Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Snapshot Modal -->
+        <div id="snapshotModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="snapshotModalTitle">
+            <div class="modal-glass-card">
+                <div class="modal-header">
+                    <h3 id="snapshotModalTitle" class="modal-title">📸 Weather Snapshot Card</h3>
+                    <button id="closeSnapshotBtn" class="modal-close-btn" aria-label="Close modal">✕</button>
+                </div>
+                
+                <!-- Shareable Preview Card -->
+                <div id="snapshotCardPreview" class="snapshot-card-preview">
+                    <div class="snapshot-inner-header">
+                        <div class="snapshot-brand">
+                            <span>⛅ AETHERIA WEATHER</span>
+                        </div>
+                        <span id="snapshotDate" class="snapshot-date">Today</span>
+                    </div>
+                    <div class="snapshot-main-row">
+                        <div>
+                            <h2 id="snapshotCity" class="snapshot-city">City, Country</h2>
+                            <p id="snapshotCondition" class="snapshot-condition">Condition</p>
+                        </div>
+                        <div class="snapshot-temp-box">
+                            <span id="snapshotIcon" class="snapshot-icon">⛅</span>
+                            <span id="snapshotTemp" class="snapshot-temp">--°C</span>
+                        </div>
+                    </div>
+                    <div class="snapshot-grid">
+                        <div><span>Feels Like:</span> <strong id="snapshotFeels">--</strong></div>
+                        <div><span>Humidity:</span> <strong id="snapshotHumidity">--</strong></div>
+                        <div><span>Wind:</span> <strong id="snapshotWind">--</strong></div>
+                        <div><span>UV Index:</span> <strong id="snapshotUv">--</strong></div>
+                    </div>
+                    <div class="snapshot-footer">
+                        <span>Designed and Developed by Ashirbad Pattnaik</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="copySnapshotTextBtn" class="btn btn-primary">📋 Copy Text Summary</button>
+                    <button id="nativeShareSnapshotBtn" class="btn btn-secondary">📤 Native Share</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dedicated Premium Author Signature Card (MANDATORY EXACT SPELLING) -->
+        <footer class="app-footer" id="appFooter">
+            <div class="author-signature-card" id="authorCard">
+                <div class="author-creator-badge">
+                    <span class="badge-sparkle">✦</span>
+                    <span class="badge-text">CREATOR</span>
+                </div>
+                <p class="author-subtitle">Designed and Developed by</p>
+                <h3 class="author-name" id="authorName">Ashirbad Pattnaik</h3>
+                <div class="author-signature-line" aria-hidden="true">
+                    <span class="signature-line-left"></span>
+                    <span class="signature-sparkle">✦</span>
+                    <span class="signature-line-right"></span>
+                </div>
+                <p class="author-app-tagline">Aetheria Weather Intelligence</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- External Libraries -->
+    <!-- Leaflet JS for Maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Chart.js for Interactive Visual Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Application Services (Modular ES / Global Architecture) -->
+    <script src="config.js"></script>
+    <script src="locationService.js"></script>
+    <script src="weatherService.js"></script>
+    <script src="imageService.js"></script>
+    <script src="placesService.js"></script>
+    <script src="storageService.js"></script>
+    
+    <!-- Main Application Orchestrator -->
+    <script src="script.js"></script>
+</body>
+</html>
