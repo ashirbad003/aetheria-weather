@@ -1,4 +1,22 @@
-# 🌌 Aetheria Weather Intelligence
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:2c5364,100:00c6ff&height=220&section=header&text=Aetheria%20Weather%20Intelligence&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Real-Time%20%E2%80%A2%203D%20Atmospheric%20%E2%80%A2%20Weather%20Intelligence&descAlignY=58&descSize=18" width="100%" alt="Aetheria banner"/>
+
+<a href="https://github.com/ashirbad003">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=2500&pause=800&color=00C6FF&center=true&vCenter=true&width=600&lines=Real+weather.+Real+intelligence.;3D+atmosphere+that+reacts+to+the+sky.;No+mock+data.+No+hardcoded+cities.;Built+by+Ashirbad+Pattnaik." alt="Typing SVG" />
+</a>
+
+<br/>
+
+![Status](https://img.shields.io/badge/status-active-2c5364?style=for-the-badge&labelColor=0f2027)
+![PWA](https://img.shields.io/badge/PWA-installable-00c6ff?style=for-the-badge&labelColor=0f2027)
+![No Mock Data](https://img.shields.io/badge/data-100%25%20real--time-brightgreen?style=for-the-badge&labelColor=0f2027)
+![Made with JS](https://img.shields.io/badge/JavaScript-ES2022-f7df1e?style=for-the-badge&logo=javascript&logoColor=000&labelColor=0f2027)
+![Maps](https://img.shields.io/badge/Maps-Standard%20%7C%20Satellite-2c5364?style=for-the-badge&labelColor=0f2027)
+
+</div>
+
+---
 
 **A premium, immersive, real-time weather intelligence platform** with a dynamic 3D atmospheric interface, interactive analytics, location discovery, live maps, and intelligent weather insights — all built on real, live data with zero mock values.
 
@@ -177,3 +195,5 @@ Designed and Developed by
 [GitHub](https://github.com/ashirbad003) · [Portfolio](https://ashirbad-portfolio-six.vercel.app)
 
 </div>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00c6ff,50:2c5364,100:0f2027&height=120&section=footer" width="100%" alt="footer wave"/>
