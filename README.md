@@ -196,4 +196,45 @@ Designed and Developed by
 
 </div>
 
+---
+
+## 🛠️ Tech Stack
+
+<div align="center">
+
+<img src="https://skillicons.dev/icons?i=html,css,js,react,nodejs,threejs,git,vscode&theme=dark" alt="tech stack icons"/>
+
+</div>
+
+---
+
+## 🐍 Live Contribution Graph
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/ashirbad003/ashirbad003/output/github-contribution-grid-snake.svg" alt="snake contribution graph" width="100%"/>
+
+<sub>Animated automatically every 24h via GitHub Actions — see <code>.github/workflows/snake.yml</code></sub>
+
+</div>
+
+---
+
+## 🎬 Demo
+
+<div align="center">
+
+<!--
+  Replace the line below with your own screen recording once ready:
+  1. Record a short clip of the 3D atmosphere + search + map in action
+  2. Convert it to a GIF (e.g. via ezgif.com or ScreenToGif)
+  3. Upload it to your repo (e.g. /assets/demo.gif) or an issue, and swap the src below
+-->
+
+<img src="./assets/demo.gif" alt="Aetheria live demo" width="90%"/>
+
+<sub>🎥 Live 3D atmosphere, global search, and analytics — recorded from the actual running app</sub>
+
+</div>
+
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00c6ff,50:2c5364,100:0f2027&height=120&section=footer" width="100%" alt="footer wave"/>
