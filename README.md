@@ -14,6 +14,10 @@
 ![Made with JS](https://img.shields.io/badge/JavaScript-ES2022-f7df1e?style=for-the-badge&logo=javascript&logoColor=000&labelColor=0f2027)
 ![Maps](https://img.shields.io/badge/Maps-Standard%20%7C%20Satellite-2c5364?style=for-the-badge&labelColor=0f2027)
 
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/🌍%20LIVE%20DEMO-aetheria--weather--phi.vercel.app-00c6ff?style=for-the-badge&labelColor=0f2027)](https://aetheria-weather-phi.vercel.app)
+
 </div>
 
 ---
@@ -224,11 +228,13 @@ Designed and Developed by
 
 <div align="center">
 
+### 🌍 [**Try Aetheria Live →**](https://aetheria-weather-phi.vercel.app)
+
 <!--
-  Replace the line below with your own screen recording once ready:
+  Add your own screen recording alongside the live link once ready:
   1. Record a short clip of the 3D atmosphere + search + map in action
   2. Convert it to a GIF (e.g. via ezgif.com or ScreenToGif)
-  3. Upload it to your repo (e.g. /assets/demo.gif) or an issue, and swap the src below
+  3. Upload it to your repo (e.g. /assets/demo.gif) and swap the src below
 -->
 
 <img src="./assets/demo.gif" alt="Aetheria live demo" width="90%"/>
