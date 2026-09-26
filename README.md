@@ -1,118 +1,148 @@
-# AETHERIA 3D — Global Real-Time Weather Intelligence Platform
+<div align="center">
 
-![Aetheria 3D Weather Platform](https://img.shields.io/badge/Release-v2.0.0-blue.svg)
-![Real Weather](https://img.shields.io/badge/Weather%20Data-100%25%20Real%20API-emerald.svg)
-![License](https://img.shields.io/badge/License-MIT-purple.svg)
+# 🌦️ AETHERIA WEATHER INTELLIGENCE
 
-A state-of-the-art, production-grade 3D global weather intelligence dashboard built with modern web technologies, real-time meteorological API pipelines, dynamic city photography, interactive analytics charts, and 3D glassmorphic interactions.
+### 🌌 Weather Intelligence, Reimagined.
 
-Designed and Developed by **Ashirbad Pattnaik**.
+<p>
+  <strong>
+    A premium 3D weather intelligence platform that transforms
+    real-time weather data into an immersive visual experience.
+  </strong>
+</p>
 
----
+<br>
 
-## 🌟 Key Highlights & Features
+<a href="https://github.com/ashirbad003/aetheria-weather">
+  <img src="https://img.shields.io/badge/GitHub-Aetheria%20Weather-18181B?style=for-the-badge&logo=github&logoColor=white">
+</a>
+<img src="https://img.shields.io/badge/3D-Weather%20Experience-7C3AED?style=for-the-badge">
+<img src="https://img.shields.io/badge/Real--Time-Weather-0EA5E9?style=for-the-badge">
+<img src="https://img.shields.io/badge/PWA-Ready-22C55E?style=for-the-badge">
+<img src="https://img.shields.io/badge/Responsive-UI-F97316?style=for-the-badge">
 
-1. **100% Real Global Weather Data**: Powered by Open-Meteo High-Resolution Numerical Meteorological models. No fake data, no hardcoded fallbacks.
-2. **Global Coordinate Geocoding & Disambiguation**: Search any city, state, or country worldwide (e.g., Tokyo, London, Bhubaneswar, Paris, New York). Intelligent disambiguation for shared names (e.g., Springfield).
-3. **Current GPS Location (One-Click)**: Browser Geolocation API integration with automatic reverse geocoding to canonical city/region/country.
-4. **Dynamic City Photography**: Real-time representative high-resolution photographs fetched asynchronously from Wikipedia & Wikimedia Commons.
-5. **Real Local Time Synchronization**: Live running clock calculating the selected city's exact IANA timezone (`Intl.DateTimeFormat`).
-6. **24-Hour Hourly & 7-Day Daily Forecast**: Complete timeline with WMO weather codes, precipitation probability, and wind metrics.
-7. **Interactive Visual Analytics (Chart.js)**:
-   - 24-Hour Temperature Spline Area Chart (Ambient vs. Feels-like)
-   - 24-Hour Humidity & Precipitation Probability Combo Chart
-   - 24-Hour Wind Speed Curve
-8. **Solar Trajectory Arc**: Visual representation of sunrise, solar noon, and sunset calculating the sun/moon's actual position along a quadratic bezier curve.
-9. **Interactive Geographic Radar Map**: Built with Leaflet.js and CartoDB Voyager tiles, auto-centering on coordinates with animated radar pulse beacon.
-10. **Favorite Cities & Recent Searches**: Persistent storage using `localStorage` with offline protection, fast switching, and live data synchronization.
-11. **Unit Conversions**: Instant mathematical conversion between Metric (°C, km/h, km) and Imperial (°F, mph, mi) without redundant network requests.
-12. **Dynamic Atmospheric Themes & Canvas Particle Physics**:
-    - Rain system with random thunderstorm lightning flashes
-    - Snow particle physics
-    - Sunbeam floating ambient particles for daytime
-    - Starfield twinkle generator for clear night skies
-13. **3D Glassmorphism & Parallax Tilt**: Interactive card physics on desktop reacting to cursor coordinates, disabled gracefully for touch and reduced-motion settings.
-14. **Weather Sharing & Snapshot**: Native Web Share API + formatted summary clipboard copy with high-definition passport card preview.
-15. **Offline Resiliency**: Automatic network detection (`online`/`offline` listeners) with honest status indicator.
+<br><br>
 
----
+🌍 **Search Any City** &nbsp; • &nbsp;
+🌤️ **Understand the Weather** &nbsp; • &nbsp;
+🧠 **Explore the Data**
 
-## 🛠️ Architecture & Technology Stack
+<br><br>
 
-- **Frontend Core**: Semantic HTML5, Modular Modern JavaScript (ES6+ Vanilla), CSS3 with Custom Properties & Glassmorphism.
-- **Charts Engine**: [Chart.js 4.4+](https://www.chartjs.org/)
-- **Map & Radar**: [Leaflet.js 1.9+](https://leafletjs.com/) with CartoDB Tile Layer.
-- **Weather Provider**: [Open-Meteo API](https://open-meteo.com/) (Keyless, high-resolution global numerical weather prediction).
-- **Geocoding & Reverse Geocoding**: Open-Meteo Geocoding API & BigDataCloud / OpenStreetMap Nominatim.
-- **Dynamic City Image Provider**: Wikipedia REST API & Wikimedia Commons API.
-- **Typography**: Google Fonts (`Outfit` & `Inter`).
+### ✦ Designed and Developed by ✦
+
+# **Ashirbad Pattnaik**
+
+</div>
 
 ---
 
-## 📂 Project Structure
+## 🌌 About Aetheria
 
-```
-weather_app/
-├── index.html              # Modern, accessible, semantic HTML5 structure
-├── style.css               # Design system, 3D transforms, glassmorphism & responsive layout
-├── script.js               # Master orchestrator, event listeners, canvas physics, DOM controller
-├── weatherService.js       # Open-Meteo API pipeline, WMO parser, deterministic insights
-├── locationService.js      # Geocoding, reverse geocoding & browser geolocation
-├── imageService.js         # Wikipedia/Wikimedia dynamic city photography pipeline
-├── storageService.js       # LocalStorage wrapper for favorites, recents, and preferences
-├── config.js               # Application configuration & API endpoint definitions
-├── .env.example            # Environment configuration template
-├── .gitignore              # Ignored files and secrets
-└── README.md               # Complete project documentation
-```
+**Aetheria Weather Intelligence** is a modern, immersive weather
+application designed to make weather information more visual,
+interactive, intelligent and meaningful.
 
----
+Instead of presenting weather as a collection of static numbers,
+Aetheria combines real-time weather data with interactive
+visualizations, atmospheric 3D environments, maps, air-quality
+information, UV intelligence, precipitation analytics and location
+discovery.
 
-## 🚀 How to Run Locally
+The interface dynamically responds to weather conditions, creating
+an experience where the UI itself becomes part of the atmosphere.
 
-### Method 1: Using Any Local Web Server (Recommended)
-You can serve the application with any static HTTP server:
-
-```bash
-# Using Node.js npx serve
-npx serve .
-
-# OR using Python 3
-python -m http.server 8000
-
-# OR using VS Code Live Server extension
-# Right-click index.html -> "Open with Live Server"
-```
-
-Then navigate to `http://localhost:8000` (or the provided port) in your browser.
-
-### Method 2: Direct Browser Execution
-Simply double-click `index.html` to open it in Chrome, Edge, Firefox, or Safari.
+> **Real Data. Intelligent Insights. Immersive Experience.**
 
 ---
 
-## 🧪 Testing Guide
+# ✨ Core Features
 
-| Feature | Test Case | Expected Behavior |
-| :--- | :--- | :--- |
-| **Search** | Type `"Tokyo"` or `"Bhubaneswar"` and press Enter | Resolves coordinates, fetches live weather, local time, hourly forecast, and city photo. |
-| **Ambiguity** | Type `"Springfield"` | Displays disambiguation dropdown (Illinois, Missouri, Massachusetts, etc.) for selection. |
-| **Invalid Search** | Type `"xyz123456nonexistent"` | Shows user-friendly toast: *"Location not found. Please verify spelling."* |
-| **GPS Geolocation**| Click **"My Location"** | Prompts browser permission, retrieves coordinates, reverse geocodes city, and displays live weather. |
-| **Units** | Click **°F** or **°C** | Instantly converts all temperatures, ranges, feels-like, and chart data without reloading. |
-| **Favorites** | Click **☆** on any city | Adds to Favorites drawer. Clicking it from the drawer loads fresh live weather. |
-| **Offline** | Disconnect Internet | Displays red top banner: *"You are currently offline. Displaying cached weather data."* |
+## 🌤️ Real-Time Weather
+
+Get detailed real-time weather information for locations around
+the world.
+
+### Weather Information
+
+- 🌡️ Current Temperature
+- 🤝 Feels Like Temperature
+- ☁️ Weather Condition
+- 💧 Humidity
+- 💨 Wind Speed
+- 🧭 Wind Direction
+- 🧱 Atmospheric Pressure
+- 👁️ Visibility
+- ☁️ Cloud Coverage
+- 🌅 Sunrise
+- 🌇 Sunset
+- 🕐 Local Time
+- 🔄 Last Updated
+
+All weather information is retrieved from real weather data
+sources.
 
 ---
 
-## 🔒 Security & Best Practices
+# 🔎 Global City Search
 
-- **Zero Hardcoded Secrets**: Default services operate keylessly through public, licensed APIs.
-- **XSS Prevention**: DOM nodes are created safely using `textContent` and sanitized structures.
-- **Accessible (A11y)**: Focus rings, ARIA labels, semantic landmark elements, high color contrast, and `@media (prefers-reduced-motion: reduce)`.
+Search for cities anywhere in the world through an intelligent
+location-resolution workflow.
+
+### Search Features
+
+- 🌍 Global city search
+- 📍 Latitude / longitude resolution
+- 🔍 Search suggestions
+- 🌎 Country and region identification
+- ⚡ Fast location switching
+- 🧠 Consistent location across application modules
+
+Once a location is selected, its canonical coordinates are used
+across weather, forecasts, maps, analytics and location discovery.
 
 ---
 
-## 👤 Author & Credits
+# 📅 Weather Forecast
 
-Designed and Developed by **Ashirbad Pattnaik**
+Aetheria provides real forecast information in an interactive
+format.
+
+### Forecast Data
+
+- Hourly forecast
+- Daily forecast
+- Temperature
+- Weather conditions
+- Humidity
+- Wind
+- Precipitation probability
+- Precipitation amount where available
+- Dynamic weather icons
+
+---
+
+# 📊 Interactive Weather Analytics
+
+Transform raw weather information into meaningful visual trends.
+
+### Analytics Include
+
+- 🌡️ Temperature trends
+- 💧 Humidity trends
+- 🌧️ Precipitation probability
+- 💨 Wind trends
+- 📅 Forecast timeline
+
+Charts automatically update when the selected location changes.
+
+```text
+                 WEATHER DATA
+                      │
+          ┌───────────┼───────────┐
+          ▼           ▼           ▼
+     🌡️ Temperature  💧 Humidity  🌧️ Rain
+          │           │           │
+          └───────────┼───────────┘
+                      ▼
+                📊 ANALYTICS
